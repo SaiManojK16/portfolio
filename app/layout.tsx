@@ -1,0 +1,89 @@
+import type React from "react";
+import type { Metadata } from "next";
+import { Analytics } from "@/components/analytics";
+import ClientLayout from "./client";
+import { Suspense } from "react";
+import { Mona_Sans as FontSans } from "next/font/google";
+import { cn } from "@/lib/utils";
+import "./globals.css";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://saimanojkartala.com'),
+  title: "Sai Manoj Kartala | AI & Full-Stack Developer",
+  description:
+    "Portfolio of Sai Manoj Kartala, an AI & Full-Stack Developer specializing in machine learning, web development, and AR technologies.",
+  keywords: [
+    "Sai Manoj Kartala",
+    "AI Developer",
+    "Full Stack Developer",
+    "Machine Learning",
+    "Python",
+    "TensorFlow",
+    "MERN Stack",
+    "AWS",
+  ],
+  authors: [{ name: "Sai Manoj Kartala" }],
+  creator: "Sai Manoj Kartala",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png" }],
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://saimanojkartala.com",
+    title: "Sai Manoj Kartala | AI & Full-Stack Developer",
+    description:
+      "Portfolio of Sai Manoj Kartala, an AI & Full-Stack Developer specializing in machine learning, web development, and AR technologies.",
+    siteName: "Sai Manoj Kartala Portfolio",
+    images: [
+      {
+        url: "/favicon.png",
+        width: 512,
+        height: 512,
+        alt: "Sai Manoj Kartala Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sai Manoj Kartala | AI & Full-Stack Developer",
+    description:
+      "Portfolio of Sai Manoj Kartala, an AI & Full-Stack Developer specializing in machine learning, web development, and AR technologies.",
+    creator: "@saimanojkartala",
+    images: ["/favicon.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  generator: "v0.dev",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+        <Suspense>
+          <ClientLayout>{children}</ClientLayout>
+        </Suspense>
+        <Analytics />
+      </body>
+    </html>
+  );
+}

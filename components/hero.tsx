@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpCircle, Download, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
 import { TypeAnimation } from "react-type-animation"
+import { usePathname } from 'next/navigation'
 
 export default function Hero() {
+  const basePath = process.env.NODE_ENV === 'production' ? '/portfolio' : '';
+  
   return (
     <section id="home" className="py-20 md:py-32 flex flex-col items-center justify-center min-h-[90vh]">
       <div className="container px-4 md:px-6 mx-auto">
@@ -47,7 +50,7 @@ export default function Hero() {
               <Link href="#contact">Get In Touch</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-full">
-              <a href="/portfolio/resume.pdf" target="_blank" rel="noopener noreferrer">
+              <a href={`${basePath}/resume.pdf`} target="_blank" rel="noopener noreferrer">
                 <Download className="mr-2 h-4 w-4" /> Download Resume
               </a>
             </Button>

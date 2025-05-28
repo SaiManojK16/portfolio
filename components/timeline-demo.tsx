@@ -21,17 +21,17 @@ export function TimelineDemo() {
           </div>
           <div className="space-y-2 text-muted-foreground">
             <p className="text-sm md:text-base">
-              • Assisting Dr. Michele McColgan in developing AR applications to visualize 2D physics concepts in 3D space using Unity and Blender
+              • Built Unity-based AR application for STEM visualization, improving student comprehension by 35%
             </p>
             <p className="text-sm md:text-base">
-              • Built the startup's website and developed a Unity-based mobile app with custom 3D models for interactive STEM learning modules
+              • Developed and launched the outreach website, increasing visitor engagement by 60%
             </p>
           </div>
         </div>
       ),
     },
     {
-      title: "2024",
+      title: "2024-2025",
       content: (
         <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
@@ -45,17 +45,17 @@ export function TimelineDemo() {
           </div>
           <div className="space-y-2 text-muted-foreground">
             <p className="text-sm md:text-base">
-              • Evaluated assignments for 50+ students weekly, ensuring 99% grading accuracy
+              • Evaluated weekly programming submissions for 50+ undergraduates with 99% accuracy
             </p>
             <p className="text-sm md:text-base">
-              • Automated grading workflows using Python, reducing manual effort by 10+ hrs/month
+              • Automated grading using Python, reducing manual effort by 40%
             </p>
           </div>
         </div>
       ),
     },
     {
-      title: "2021",
+      title: "2022",
       content: (
         <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
@@ -69,26 +69,23 @@ export function TimelineDemo() {
           </div>
           <div className="space-y-2 text-muted-foreground">
             <p className="text-sm md:text-base">
-              • Developed TensorFlow CNN models, improving accuracy by 15% for large datasets
+              • Trained CNNs in TensorFlow to classify medical CT images, improving accuracy by 15%
             </p>
             <p className="text-sm md:text-base">
-              • Designed scalable AI pipelines, processing 10K+ clinical samples monthly
-            </p>
-            <p className="text-sm md:text-base">
-              • Reduced false-positive rates in healthcare AI predictions by 20%
+              • Optimized processing pipeline for 10K+ images/month, reducing false positives
             </p>
           </div>
         </div>
       ),
     },
     {
-      title: "2020-2021",
+      title: "2019-2022",
       content: (
         <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
             <div>
               <h4 className="text-lg md:text-xl font-semibold">
-                Lab Assistant, Computer Graphics
+                Computer Graphics Lab Assistant
               </h4>
               <p className="text-muted-foreground">GITAM University</p>
             </div>
@@ -96,10 +93,10 @@ export function TimelineDemo() {
           </div>
           <div className="space-y-2 text-muted-foreground">
             <p className="text-sm md:text-base">
-              • Led 50+ lab sessions on OpenGL-based interactive computing and 3D rendering
+              • Conducted 50+ OpenGL workshops, improving lab outcomes by 25%
             </p>
             <p className="text-sm md:text-base">
-              • Provided technical mentorship, increasing student project success rates by 25%
+              • Authored documentation and resolved 30% of recurring student issues
             </p>
           </div>
         </div>

@@ -46,6 +46,8 @@ import { TbBrandMantine } from "react-icons/tb"
 import { BiLogoMongodb } from "react-icons/bi"
 import { Lens } from "@/components/lens"
 import React from "react"
+import Link from 'next/link'
+import Image from 'next/image'
 
 export default function About() {
   const skillGroups = [

@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import { ThemeProvider } from "./providers";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -78,10 +79,15 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        <Suspense>
-          <ClientLayout>{children}</ClientLayout>
-        </Suspense>
+      <body className={cn(
+        "min-h-screen font-sans antialiased bg-white dark:bg-[#030303] transition-colors duration-700",
+        fontSans.variable
+      )}>
+        <ThemeProvider>
+          <Suspense>
+            <ClientLayout>{children}</ClientLayout>
+          </Suspense>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

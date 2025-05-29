@@ -92,3 +92,24 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes highlightSweep {
+  0% {
+    background-size: 0% 100%;
+  }
+  100% {
+    background-size: 100% 100%;
+  }
+}
+
+.highlight-animate {
+  background: linear-gradient(90deg, #ffe066 0%, #ffd700 100%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  animation: highlightSweep 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  padding: 0.1em 0.2em;
+  border-radius: 0.25em;
+  font-weight: 600;
+  color: #222;
+  transition: background-size 0.3s;
+}

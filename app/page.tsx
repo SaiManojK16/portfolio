@@ -4,12 +4,6 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Hero from "@/components/hero"
-import About from "@/components/about"
-import Skills from "@/components/skills"
-import Experience from "@/components/experience"
-import Projects from "@/components/projects"
-import Education from "@/components/education"
-import Contact from "@/components/contact"
 
 export default function Home() {
   const searchParams = useSearchParams()
@@ -33,12 +27,6 @@ export default function Home() {
   return (
     <div className="w-full">
       <Hero />
-      <About />
-      <Skills />
-      <Experience />
-      <Projects />
-      <Education />
-      <Contact />
     </div>
   )
 }

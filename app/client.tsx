@@ -6,9 +6,10 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import Header from "@/components/header"
-import Footer from "@/components/footer"
-import AnimatedBackground from "@/components/animated-background"
+import Background from "@/components/background"
 import NoScriptStyles from "@/components/noscript-styles"
+import ThemeToggle from "@/components/theme-toggle"
+import { usePathname } from "next/navigation"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,10 +29,12 @@ export default function ClientLayout({
             For the best experience, please enable JavaScript. Some features may be limited without it.
           </div>
         </noscript>
-        <AnimatedBackground />
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
+        {usePathname() === "/" && <Background />}
         <Header />
         <main className="flex-1 relative z-10">{children}</main>
-        <Footer />
       </div>
     </ThemeProvider>
   )

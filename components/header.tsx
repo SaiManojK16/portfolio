@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { FloatingDock } from "./ui/floating-dock"
+import Link from "next/link"
 import {
   IconHome,
   IconUser,

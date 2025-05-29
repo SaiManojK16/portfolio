@@ -188,7 +188,9 @@ function IconContainer({
   submenu?: SubMenuItem[];
 }) {
   let ref = useRef<HTMLDivElement>(null);
-  const [showSubmenu, setShowSubmenu] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState(false);
+  const isExternalLink = href.startsWith('http') || href.startsWith('mailto:') || href === '#';
 
   let distance = useTransform(mouseX, (val) => {
     let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
@@ -223,8 +225,6 @@ function IconContainer({
     damping: 12,
   });
 
-  const [hovered, setHovered] = useState(false);
-
   if (submenu) {
     return (
       <div className="relative">
@@ -232,10 +232,10 @@ function IconContainer({
           ref={ref}
           style={{ width, height }}
           onMouseEnter={() => {
-            setShowSubmenu(true);
+            setOpenSubmenu(true);
           }}
           onMouseLeave={() => {
-            setShowSubmenu(false);
+            setOpenSubmenu(false);
           }}
           className="relative flex aspect-square items-center justify-center rounded-full bg-gray-200 dark:bg-neutral-800"
         >
@@ -246,7 +246,7 @@ function IconContainer({
             {icon}
           </motion.div>
           <AnimatePresence>
-            {showSubmenu && (
+            {openSubmenu && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -287,34 +287,38 @@ function IconContainer({
     );
   }
 
-  return (
-    <a href={href}>
+  const content = (
+    <motion.div
+      ref={ref}
+      style={{ width, height }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative flex aspect-square items-center justify-center rounded-full bg-gray-200 dark:bg-neutral-800"
+    >
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 2, x: "-50%" }}
+            className="absolute -top-8 left-1/2 w-fit rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs whitespace-pre text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white"
+          >
+            {title}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
-        ref={ref}
-        style={{ width, height }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className="relative flex aspect-square items-center justify-center rounded-full bg-gray-200 dark:bg-neutral-800"
+        style={{ width: widthIcon, height: heightIcon }}
+        className="flex items-center justify-center"
       >
-        <AnimatePresence>
-          {hovered && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, x: "-50%" }}
-              animate={{ opacity: 1, y: 0, x: "-50%" }}
-              exit={{ opacity: 0, y: 2, x: "-50%" }}
-              className="absolute -top-8 left-1/2 w-fit rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs whitespace-pre text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white"
-            >
-              {title}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <motion.div
-          style={{ width: widthIcon, height: heightIcon }}
-          className="flex items-center justify-center"
-        >
-          {icon}
-        </motion.div>
+        {icon}
       </motion.div>
-    </a>
+    </motion.div>
   );
+
+  if (isExternalLink) {
+    return <a href={href}>{content}</a>;
+  }
+
+  return <Link href={href}>{content}</Link>;
 } 

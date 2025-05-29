@@ -1,6 +1,5 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Analytics } from "@/components/analytics";
 import ClientLayout from "./client";
 import { Suspense } from "react";
 import { Inter as FontSans } from "next/font/google";
@@ -88,7 +87,6 @@ export default function RootLayout({
             <ClientLayout>{children}</ClientLayout>
           </Suspense>
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );

@@ -5,7 +5,6 @@ import { Inter as FontSans } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "next-themes"
 import { cn } from "@/lib/utils"
-import Header from "@/components/header"
 import Background from "@/components/background"
 import NoScriptStyles from "@/components/noscript-styles"
 import ThemeToggle from "@/components/theme-toggle"
@@ -40,7 +39,6 @@ export default function ClientLayout({
           <ThemeToggle />
         </div>
         {usePathname() === "/" && <Background />}
-        <Header />
         <FloatingDock items={navItems} />
         <main className="flex-1 relative z-10">{children}</main>
       </div>

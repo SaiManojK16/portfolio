@@ -1,16 +1,15 @@
 import type { ReactNode } from "react"
 import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconBrandTwitter,
   IconHome,
-  IconMail,
   IconUser,
-  IconBriefcase,
-  IconCode,
+  IconDeviceDesktop,
   IconSchool,
-  IconBrandDiscord,
-  IconShare3,
+  IconMail,
+  IconFileText,
+  IconBrandGithub,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+  IconWorld,
 } from "@tabler/icons-react"
 
 type NavItem = {
@@ -27,58 +26,53 @@ type NavItem = {
 export const navItems: NavItem[] = [
   {
     title: "Home",
+    icon: <IconHome className="h-full w-full text-foreground/80" />,
     href: "/",
-    icon: <IconHome />,
   },
   {
     title: "About",
+    icon: <IconUser className="h-full w-full text-foreground/80" />,
     href: "/about",
-    icon: <IconUser />,
-  },
-  {
-    title: "Experience",
-    href: "/experience",
-    icon: <IconBriefcase />,
   },
   {
     title: "Projects",
+    icon: <IconDeviceDesktop className="h-full w-full text-foreground/80" />,
     href: "/projects",
-    icon: <IconCode />,
+  },
+  {
+    title: "Resume",
+    icon: <IconFileText className="h-full w-full text-foreground/80" />,
+    href: "/resume.pdf",
   },
   {
     title: "Education",
+    icon: <IconSchool className="h-full w-full text-foreground/80" />,
     href: "/education",
-    icon: <IconSchool />,
   },
   {
     title: "Contact",
+    icon: <IconMail className="h-full w-full text-foreground/80" />,
     href: "/contact",
-    icon: <IconMail />,
   },
   {
-    title: "Social",
+    title: "Socials",
+    icon: <IconWorld className="h-full w-full text-foreground/80" />,
     href: "#",
-    icon: <IconShare3 />,
     submenu: [
       {
         title: "GitHub",
+        icon: <IconBrandGithub className="h-full w-full text-foreground/80" />,
         href: "https://github.com/SaiManojK16",
-        icon: <IconBrandGithub />,
       },
       {
         title: "LinkedIn",
-        href: "https://www.linkedin.com/in/sai-manoj-kartala/",
-        icon: <IconBrandLinkedin />,
+        icon: <IconBrandLinkedin className="h-full w-full text-foreground/80" />,
+        href: "https://www.linkedin.com/in/sai-manoj-kartala-592ab9239/",
       },
       {
-        title: "Twitter",
-        href: "https://twitter.com/saimanojkartala",
-        icon: <IconBrandTwitter />,
-      },
-      {
-        title: "Discord",
-        href: "https://discord.com/users/saimanojkartala",
-        icon: <IconBrandDiscord />,
+        title: "Instagram",
+        icon: <IconBrandInstagram className="h-full w-full text-foreground/80" />,
+        href: "https://www.instagram.com/kartalamanoj",
       },
     ],
   },

@@ -86,16 +86,10 @@ export default function Header() {
   }, [])
 
   return (
-    <nav
-      className={cn(
-        "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-auto shadow-sm shadow-black/10",
-        scrolled ? "opacity-100" : "opacity-90 hover:opacity-100"
-      )}
-    >
+    <nav className="relative z-50">
       <FloatingDock
         items={navItems}
-        desktopClassName="bg-background/80 border-border/50"
-        mobileClassName="translate-y-0"
+        className="bg-background/80 border-border/50"
       />
     </nav>
   )

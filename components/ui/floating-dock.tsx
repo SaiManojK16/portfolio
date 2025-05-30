@@ -59,121 +59,127 @@ const FloatingDockMobile = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const pathname = usePathname();
 
   return (
-    <div className={cn("relative block md:hidden", className)}>
+    <div className={cn("block md:hidden", className)}>
+      {/* Top Navigation Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gray-50/90 dark:bg-neutral-900/90 backdrop-blur-lg border-b border-gray-200/50 dark:border-neutral-800/50">
+        <div className="flex items-center justify-between px-4 h-14">
+          <Link href="/" className="text-lg font-semibold">
+            Portfolio
+          </Link>
+          <motion.button
+            onClick={() => setOpen(!open)}
+            className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+            whileTap={{ scale: 0.95 }}
+          >
+            <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Menu Overlay */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            layoutId="nav"
-            className="fixed inset-x-4 bottom-24 z-50 flex flex-col gap-3 rounded-2xl bg-gray-50/90 dark:bg-neutral-900/90 backdrop-blur-lg p-4 border border-gray-200/50 dark:border-neutral-800/50 shadow-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-          >
-            <div className="grid grid-cols-4 gap-4">
-              {items.map((item, idx) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: 10,
-                    transition: {
-                      delay: idx * 0.05,
-                    },
-                  }}
-                  transition={{ delay: (items.length - 1 - idx) * 0.05 }}
-                  className="flex flex-col items-center gap-1"
-                >
-                  {item.submenu ? (
-                    <div className="relative">
-                      <button
-                        onClick={() => setOpenSubmenu(openSubmenu === item.title ? null : item.title)}
-                        className="flex flex-col items-center"
-                      >
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
-                          <div className="h-5 w-5">{item.icon}</div>
-                        </div>
-                        <span className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
-                          {item.title}
-                        </span>
-                      </button>
-                      <AnimatePresence>
-                        {openSubmenu === item.title && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2"
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 z-40 bg-black/20 dark:bg-black/40 backdrop-blur-sm"
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ type: "spring", damping: 20 }}
+              className="fixed top-14 right-0 bottom-0 z-50 w-64 bg-gray-50 dark:bg-neutral-900 border-l border-gray-200/50 dark:border-neutral-800/50 overflow-y-auto"
+            >
+              <div className="flex flex-col p-4 gap-2">
+                {items.map((item, idx) => (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    {item.submenu ? (
+                      <div className="relative">
+                        <button
+                          onClick={() => setOpenSubmenu(openSubmenu === item.title ? null : item.title)}
+                          className="flex w-full items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="h-5 w-5">{item.icon}</div>
+                            <span className="text-sm font-medium">{item.title}</span>
+                          </div>
+                        </button>
+                        <AnimatePresence>
+                          {openSubmenu === item.title && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="mt-1 ml-4 border-l-2 border-gray-200 dark:border-neutral-800"
+                            >
+                              {item.submenu.map((subitem) => (
+                                <a
+                                  key={subitem.title}
+                                  href={subitem.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-lg ml-2"
+                                  onClick={() => setOpen(false)}
+                                >
+                                  <div className="h-4 w-4">{subitem.icon}</div>
+                                  <span className="text-sm">{subitem.title}</span>
+                                </a>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <>
+                        {item.href.startsWith('http') || item.href.startsWith('mailto:') || item.href === '#' ? (
+                          <a
+                            href={item.href}
+                            className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                            onClick={() => setOpen(false)}
                           >
-                            <div className="rounded-xl bg-gray-100 dark:bg-neutral-800 p-3 shadow-lg">
-                              <div className="flex flex-col gap-2">
-                                {item.submenu.map((subitem) => (
-                                  <a
-                                    key={subitem.title}
-                                    href={subitem.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200 dark:hover:bg-neutral-700"
-                                  >
-                                    <div className="h-4 w-4">{subitem.icon}</div>
-                                    <span className="text-sm">{subitem.title}</span>
-                                  </a>
-                                ))}
-                              </div>
-                            </div>
-                          </motion.div>
+                            <div className="h-5 w-5">{item.icon}</div>
+                            <span className="text-sm font-medium">{item.title}</span>
+                          </a>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800",
+                              pathname === item.href && "bg-gray-100 dark:bg-neutral-800"
+                            )}
+                            onClick={() => setOpen(false)}
+                          >
+                            <div className="h-5 w-5">{item.icon}</div>
+                            <span className="text-sm font-medium">{item.title}</span>
+                          </Link>
                         )}
-                      </AnimatePresence>
-                    </div>
-                  ) : (
-                    <>
-                      {item.href.startsWith('http') || item.href.startsWith('mailto:') || item.href === '#' ? (
-                        <a
-                          href={item.href}
-                          className="flex flex-col items-center"
-                        >
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
-                            <div className="h-5 w-5">{item.icon}</div>
-                          </div>
-                          <span className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
-                            {item.title}
-                          </span>
-                        </a>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          className="flex flex-col items-center"
-                          onClick={() => setOpen(false)}
-                        >
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
-                            <div className="h-5 w-5">{item.icon}</div>
-                          </div>
-                          <span className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
-                            {item.title}
-                          </span>
-                        </Link>
-                      )}
-                    </>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                      </>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-      <motion.button
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-800 shadow-lg border border-gray-200/50 dark:border-neutral-700/50"
-        whileTap={{ scale: 0.9 }}
-      >
-        <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
-      </motion.button>
+
+      {/* Add padding to account for fixed header */}
+      <div className="h-14" />
     </div>
   );
 };

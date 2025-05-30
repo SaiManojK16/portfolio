@@ -62,20 +62,16 @@ const FloatingDockMobile = ({
   const pathname = usePathname();
 
   return (
-    <div className={cn("block md:hidden fixed inset-x-0 top-0 z-[100]", className)}>
-      {/* Top Navigation Bar */}
-      <div className="bg-gray-50/95 dark:bg-neutral-900/95 backdrop-blur-lg border-b border-gray-200/50 dark:border-neutral-800/50 shadow-sm">
-        <div className="flex items-center justify-between px-4 h-16">
-          <Link href="/" className="text-lg font-semibold">
-            Portfolio
-          </Link>
-          <button
-            onClick={() => setOpen(!open)}
-            className="flex h-12 w-12 items-center justify-center rounded-lg hover:bg-gray-100/50 dark:hover:bg-neutral-800/50 active:scale-95 transition-all"
-          >
-            <IconLayoutNavbarCollapse className="h-6 w-6 text-neutral-600 dark:text-neutral-300" />
-          </button>
-        </div>
+    <div className={cn("block md:hidden", className)}>
+      {/* Menu Button */}
+      <div className="fixed top-4 left-4 z-[100]">
+        <motion.button
+          onClick={() => setOpen(!open)}
+          className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-50/90 dark:bg-neutral-900/90 backdrop-blur-lg border border-gray-200/50 dark:border-neutral-800/50 hover:bg-gray-100/50 dark:hover:bg-neutral-800/50 active:scale-95 transition-all shadow-sm"
+          whileTap={{ scale: 0.95 }}
+        >
+          <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />
+        </motion.button>
       </div>
 
       {/* Menu Overlay */}
@@ -89,22 +85,21 @@ const FloatingDockMobile = ({
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
               className="fixed inset-0 z-40 bg-black/20 dark:bg-black/40 backdrop-blur-sm"
-              style={{ top: '64px' }}
             />
 
             {/* Menu Content */}
             <motion.div
-              initial={{ opacity: 0, x: "100%" }}
+              initial={{ opacity: 0, x: "-100%" }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: "100%" }}
+              exit={{ opacity: 0, x: "-100%" }}
               transition={{ type: "spring", damping: 20 }}
-              className="fixed top-16 right-0 bottom-0 z-50 w-72 bg-gray-50/95 dark:bg-neutral-900/95 backdrop-blur-lg border-l border-gray-200/50 dark:border-neutral-800/50 overflow-y-auto shadow-xl"
+              className="fixed top-0 left-0 bottom-0 z-50 w-72 bg-gray-50/95 dark:bg-neutral-900/95 backdrop-blur-lg border-r border-gray-200/50 dark:border-neutral-800/50 overflow-y-auto shadow-xl"
             >
-              <nav className="flex flex-col p-4 gap-2">
+              <nav className="flex flex-col p-4 gap-2 mt-16">
                 {items.map((item, idx) => (
                   <motion.div
                     key={item.title}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
                   >

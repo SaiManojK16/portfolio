@@ -42,7 +42,7 @@ export default function ClientLayout({
         {usePathname() === "/" && <Background />}
         <Header />
         <FloatingDock items={navItems} />
-        <main className="flex-1 relative z-10 min-h-screen pt-16 md:pt-0">{children}</main>
+        <main className="flex-1 relative z-10">{children}</main>
       </div>
     </ThemeProvider>
   )

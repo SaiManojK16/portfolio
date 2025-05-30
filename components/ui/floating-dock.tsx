@@ -66,97 +66,114 @@ const FloatingDockMobile = ({
         {open && (
           <motion.div
             layoutId="nav"
-            className="absolute inset-x-0 bottom-full mb-2 flex flex-col gap-2"
+            className="fixed inset-x-4 bottom-24 z-50 flex flex-col gap-3 rounded-2xl bg-gray-50/90 dark:bg-neutral-900/90 backdrop-blur-lg p-4 border border-gray-200/50 dark:border-neutral-800/50 shadow-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
           >
-            {items.map((item, idx) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  y: 10,
-                  transition: {
-                    delay: idx * 0.05,
-                  },
-                }}
-                transition={{ delay: (items.length - 1 - idx) * 0.05 }}
-              >
-                {item.submenu ? (
-                  <div className="relative">
-                    <button
-                      onClick={() => setOpenSubmenu(openSubmenu === item.title ? null : item.title)}
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900"
-                    >
-                      <div className="h-4 w-4">{item.icon}</div>
-                    </button>
-                    <AnimatePresence>
-                      {openSubmenu === item.title && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          className="absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 z-50"
-                          style={{ 
-                            width: 'max-content',
-                            marginLeft: '-4px'
-                          }}
+            <div className="grid grid-cols-4 gap-4">
+              {items.map((item, idx) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 10,
+                    transition: {
+                      delay: idx * 0.05,
+                    },
+                  }}
+                  transition={{ delay: (items.length - 1 - idx) * 0.05 }}
+                  className="flex flex-col items-center gap-1"
+                >
+                  {item.submenu ? (
+                    <div className="relative">
+                      <button
+                        onClick={() => setOpenSubmenu(openSubmenu === item.title ? null : item.title)}
+                        className="flex flex-col items-center"
+                      >
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
+                          <div className="h-5 w-5">{item.icon}</div>
+                        </div>
+                        <span className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                          {item.title}
+                        </span>
+                      </button>
+                      <AnimatePresence>
+                        {openSubmenu === item.title && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2"
+                          >
+                            <div className="rounded-xl bg-gray-100 dark:bg-neutral-800 p-3 shadow-lg">
+                              <div className="flex flex-col gap-2">
+                                {item.submenu.map((subitem) => (
+                                  <a
+                                    key={subitem.title}
+                                    href={subitem.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200 dark:hover:bg-neutral-700"
+                                  >
+                                    <div className="h-4 w-4">{subitem.icon}</div>
+                                    <span className="text-sm">{subitem.title}</span>
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <>
+                      {item.href.startsWith('http') || item.href.startsWith('mailto:') || item.href === '#' ? (
+                        <a
+                          href={item.href}
+                          className="flex flex-col items-center"
                         >
-                          <div className="bg-gray-50 dark:bg-neutral-900 rounded-xl p-3 shadow-lg border border-gray-200 dark:border-neutral-800">
-                            <div className="text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-2 text-center">
-                              Socials
-                            </div>
-                            <div className="flex flex-col gap-2 items-center">
-                              {item.submenu.map((subitem) => (
-                                <a
-                                  key={subitem.title}
-                                  href={subitem.href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors"
-                                >
-                                  <div className="h-4 w-4">{subitem.icon}</div>
-                                </a>
-                              ))}
-                            </div>
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
+                            <div className="h-5 w-5">{item.icon}</div>
                           </div>
-                        </motion.div>
+                          <span className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                            {item.title}
+                          </span>
+                        </a>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className="flex flex-col items-center"
+                          onClick={() => setOpen(false)}
+                        >
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800">
+                            <div className="h-5 w-5">{item.icon}</div>
+                          </div>
+                          <span className="mt-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                            {item.title}
+                          </span>
+                        </Link>
                       )}
-                    </AnimatePresence>
-                  </div>
-                ) : (
-                  <>
-                    {item.href.startsWith('http') || item.href.startsWith('mailto:') || item.href === '#' ? (
-                      <a
-                        href={item.href}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900"
-                      >
-                        <div className="h-4 w-4">{item.icon}</div>
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900"
-                      >
-                        <div className="h-4 w-4">{item.icon}</div>
-                      </Link>
-                    )}
-                  </>
-                )}
-              </motion.div>
-            ))}
+                    </>
+                  )}
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <button
+      <motion.button
         onClick={() => setOpen(!open)}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-800"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-800 shadow-lg border border-gray-200/50 dark:border-neutral-700/50"
+        whileTap={{ scale: 0.9 }}
       >
         <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
-      </button>
+      </motion.button>
     </div>
   );
 };

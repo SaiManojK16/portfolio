@@ -76,10 +76,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <meta name="theme-color" content="#030303" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={cn(
-        "min-h-screen font-sans antialiased bg-white dark:bg-[#030303] transition-colors duration-700",
+        "min-h-screen font-sans antialiased bg-white dark:bg-[#030303] transition-colors duration-700 overflow-x-hidden",
         fontSans.variable
       )}>
         <ThemeProvider>

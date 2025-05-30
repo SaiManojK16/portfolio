@@ -73,11 +73,11 @@ export default function Hero() {
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div custom={1} variants={fadeUpVariants} initial="hidden" animate="visible">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight flex items-center justify-center gap-4">
-              <span className="text-black/60 dark:text-white/60">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+              <span className="text-black/60 dark:text-white/60 whitespace-nowrap">
                 Hi, I'm
               </span>
-              <span className="bg-clip-text text-transparent bg-gradient-to-b from-black dark:from-white to-black/80 dark:to-white/80">
+              <span className="bg-clip-text text-transparent bg-gradient-to-b from-black dark:from-white to-black/80 dark:to-white/80 whitespace-nowrap">
                 Sai Manoj Kartala
               </span>
             </h1>

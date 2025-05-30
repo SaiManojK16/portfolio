@@ -3,13 +3,15 @@
 import type React from "react"
 import { Inter as FontSans } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "next-themes"
 import { cn } from "@/lib/utils"
 import Header from "@/components/header"
 import Background from "@/components/background"
 import NoScriptStyles from "@/components/noscript-styles"
 import ThemeToggle from "@/components/theme-toggle"
 import { usePathname } from "next/navigation"
+import { FloatingDock } from "@/components/ui/floating-dock"
+import { navItems } from "@/config/nav"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,7 +24,12 @@ export default function ClientLayout({
   children: React.ReactNode
 }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <noscript>
           <div className="bg-yellow-100 dark:bg-yellow-900 p-4 text-center text-sm">
@@ -34,7 +41,8 @@ export default function ClientLayout({
         </div>
         {usePathname() === "/" && <Background />}
         <Header />
-        <main className="flex-1 relative z-10">{children}</main>
+        <FloatingDock items={navItems} />
+        <main className="flex-1 relative z-10 min-h-screen pt-16 md:pt-0">{children}</main>
       </div>
     </ThemeProvider>
   )

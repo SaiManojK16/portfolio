@@ -62,20 +62,19 @@ const FloatingDockMobile = ({
   const pathname = usePathname();
 
   return (
-    <div className={cn("block md:hidden", className)}>
+    <div className={cn("block md:hidden fixed inset-x-0 top-0 z-[100]", className)}>
       {/* Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-gray-50/90 dark:bg-neutral-900/90 backdrop-blur-lg border-b border-gray-200/50 dark:border-neutral-800/50">
-        <div className="flex items-center justify-between px-4 h-14">
+      <div className="bg-gray-50/95 dark:bg-neutral-900/95 backdrop-blur-lg border-b border-gray-200/50 dark:border-neutral-800/50 shadow-sm">
+        <div className="flex items-center justify-between px-4 h-16">
           <Link href="/" className="text-lg font-semibold">
             Portfolio
           </Link>
-          <motion.button
+          <button
             onClick={() => setOpen(!open)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
-            whileTap={{ scale: 0.95 }}
+            className="flex h-12 w-12 items-center justify-center rounded-lg hover:bg-gray-100/50 dark:hover:bg-neutral-800/50 active:scale-95 transition-all"
           >
-            <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
-          </motion.button>
+            <IconLayoutNavbarCollapse className="h-6 w-6 text-neutral-600 dark:text-neutral-300" />
+          </button>
         </div>
       </div>
 
@@ -90,6 +89,7 @@ const FloatingDockMobile = ({
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
               className="fixed inset-0 z-40 bg-black/20 dark:bg-black/40 backdrop-blur-sm"
+              style={{ top: '64px' }}
             />
 
             {/* Menu Content */}
@@ -98,9 +98,9 @@ const FloatingDockMobile = ({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ type: "spring", damping: 20 }}
-              className="fixed top-14 right-0 bottom-0 z-50 w-64 bg-gray-50 dark:bg-neutral-900 border-l border-gray-200/50 dark:border-neutral-800/50 overflow-y-auto"
+              className="fixed top-16 right-0 bottom-0 z-50 w-72 bg-gray-50/95 dark:bg-neutral-900/95 backdrop-blur-lg border-l border-gray-200/50 dark:border-neutral-800/50 overflow-y-auto shadow-xl"
             >
-              <div className="flex flex-col p-4 gap-2">
+              <nav className="flex flex-col p-4 gap-2">
                 {items.map((item, idx) => (
                   <motion.div
                     key={item.title}
@@ -112,11 +112,11 @@ const FloatingDockMobile = ({
                       <div className="relative">
                         <button
                           onClick={() => setOpenSubmenu(openSubmenu === item.title ? null : item.title)}
-                          className="flex w-full items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                          className="flex w-full items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
                         >
                           <div className="flex items-center gap-3">
                             <div className="h-5 w-5">{item.icon}</div>
-                            <span className="text-sm font-medium">{item.title}</span>
+                            <span className="text-base font-medium">{item.title}</span>
                           </div>
                         </button>
                         <AnimatePresence>
@@ -133,11 +133,11 @@ const FloatingDockMobile = ({
                                   href={subitem.href}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-lg ml-2"
+                                  className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-lg ml-2 transition-colors"
                                   onClick={() => setOpen(false)}
                                 >
                                   <div className="h-4 w-4">{subitem.icon}</div>
-                                  <span className="text-sm">{subitem.title}</span>
+                                  <span className="text-base">{subitem.title}</span>
                                 </a>
                               ))}
                             </motion.div>
@@ -149,37 +149,34 @@ const FloatingDockMobile = ({
                         {item.href.startsWith('http') || item.href.startsWith('mailto:') || item.href === '#' ? (
                           <a
                             href={item.href}
-                            className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
                             onClick={() => setOpen(false)}
                           >
                             <div className="h-5 w-5">{item.icon}</div>
-                            <span className="text-sm font-medium">{item.title}</span>
+                            <span className="text-base font-medium">{item.title}</span>
                           </a>
                         ) : (
                           <Link
                             href={item.href}
                             className={cn(
-                              "flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800",
+                              "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors",
                               pathname === item.href && "bg-gray-100 dark:bg-neutral-800"
                             )}
                             onClick={() => setOpen(false)}
                           >
                             <div className="h-5 w-5">{item.icon}</div>
-                            <span className="text-sm font-medium">{item.title}</span>
+                            <span className="text-base font-medium">{item.title}</span>
                           </Link>
                         )}
                       </>
                     )}
                   </motion.div>
                 ))}
-              </div>
+              </nav>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-
-      {/* Add padding to account for fixed header */}
-      <div className="h-14" />
     </div>
   );
 };

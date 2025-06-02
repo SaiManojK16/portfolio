@@ -23,12 +23,14 @@ const fadeInUp = {
 const timelineData = [
   {
     year: "2025–Present",
-    title: "Augmented Reality Research Assistant",
-    company: "Siena College",
+    title: "Full Stack Web & Mobile Developer",
+    company: "MARVLS, LLC @ Siena College",
     location: "Remote",
     description: [
-      "Built Unity-based AR application for STEM visualization, improving student comprehension by 35%.",
-      "Developed and launched the outreach website, increasing visitor engagement by 60%.",
+      "Spearheading the end-to-end development of an interactive AR-based educational platform as part of the MARVLS research initiative.",
+      "Designing and deploying a full-stack website from scratch to showcase and support AR learning experiences.",
+      "Building mobile applications using Flutter for both iOS and Android, integrating real-time AR models with educational content.",
+      "Developing and optimizing 3D AR experiences using Unity for interactive STEM visualizations.",
     ],
   },
   {

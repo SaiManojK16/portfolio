@@ -7,24 +7,30 @@ import { Badge } from "@/components/ui/badge";
 export function TimelineDemo() {
   const data = [
     {
-      title: "2024-2025",
+      title: "2025-Present",
       content: (
         <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
             <div>
               <h4 className="text-lg md:text-xl font-semibold">
-                Augmented Reality Research Assistant
+                Full Stack Web & Mobile Developer
               </h4>
-              <p className="text-muted-foreground">Siena College</p>
+              <p className="text-muted-foreground">MARVLS, LLC @ Siena College</p>
             </div>
             <Badge variant="outline" className="w-fit">Remote</Badge>
           </div>
           <div className="space-y-2 text-muted-foreground">
             <p className="text-sm md:text-base">
-              • Built Unity-based AR application for STEM visualization, improving student comprehension by 35%
+              • Spearheading the end-to-end development of an interactive AR-based educational platform
             </p>
             <p className="text-sm md:text-base">
-              • Developed and launched the outreach website, increasing visitor engagement by 60%
+              • Designing and deploying a full-stack website from scratch to showcase and support AR learning experiences
+            </p>
+            <p className="text-sm md:text-base">
+              • Building mobile applications using Flutter for both iOS and Android, integrating real-time AR models
+            </p>
+            <p className="text-sm md:text-base">
+              • Developing and optimizing 3D AR experiences using Unity for interactive STEM visualizations
             </p>
           </div>
         </div>
@@ -72,7 +78,7 @@ export function TimelineDemo() {
               • Trained CNNs in TensorFlow to classify medical CT images, improving accuracy by 15%
             </p>
             <p className="text-sm md:text-base">
-              • Optimized processing pipeline for 10K+ images/month, reducing false positives
+              • Collaborated with data scientists and healthcare experts, validating model reliability on 5,000 clinical samples
             </p>
           </div>
         </div>
@@ -93,10 +99,10 @@ export function TimelineDemo() {
           </div>
           <div className="space-y-2 text-muted-foreground">
             <p className="text-sm md:text-base">
-              • Conducted 50+ OpenGL workshops, improving lab outcomes by 25%
+              • Supported 10+ OpenGL projects, managing lab setups for 50+ students
             </p>
             <p className="text-sm md:text-base">
-              • Authored documentation and resolved 30% of recurring student issues
+              • Mentored students on graphics projects, improving success rates by 25%
             </p>
           </div>
         </div>

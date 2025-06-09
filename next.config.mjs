@@ -19,10 +19,6 @@ const nextConfig = {
       },
     ],
   },
-  trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/portfolio' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/portfolio/' : '',
-  distDir: 'out',
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     // Fixes npm packages that depend on `fs` module
@@ -39,19 +35,6 @@ const nextConfig = {
           chunkFilename: 'static/css/[id].[contenthash].css',
         })
       );
-    }
-
-    // Add CSS extraction plugin configuration
-    if (!isServer) {
-      config.module.rules.forEach((rule) => {
-        const { oneOf } = rule;
-        if (oneOf) {
-          oneOf.forEach((one) => {
-            if (!`${one.issuer?.and}`.includes('_app')) return;
-            one.issuer.and = [path.resolve(__dirname)];
-          });
-        }
-      });
     }
 
     return config;

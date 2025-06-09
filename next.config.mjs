@@ -1,6 +1,5 @@
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import fs from 'fs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -25,15 +24,6 @@ const nextConfig = {
   assetPrefix: process.env.NODE_ENV === 'production' ? '/portfolio/' : '',
   distDir: 'out',
   reactStrictMode: true,
-  output: 'export',
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:3008/api/:path*',
-      },
-    ];
-  },
   webpack: (config, { isServer }) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
@@ -49,23 +39,6 @@ const nextConfig = {
           chunkFilename: 'static/css/[id].[contenthash].css',
         })
       );
-    }
-
-    // Copy resume.pdf to the output directory during build
-    if (isServer) {
-      const publicDir = path.join(process.cwd(), 'public');
-      const outputDir = path.join(process.cwd(), '.next', 'public');
-      
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-      }
-      
-      if (fs.existsSync(path.join(publicDir, 'resume.pdf'))) {
-        fs.copyFileSync(
-          path.join(publicDir, 'resume.pdf'),
-          path.join(outputDir, 'resume.pdf')
-        );
-      }
     }
 
     // Add CSS extraction plugin configuration

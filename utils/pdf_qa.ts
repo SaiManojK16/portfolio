@@ -1,4 +1,5 @@
-import fs from 'fs/promises'
+import fs from 'fs'
+import path from 'path'
 import pdf from 'pdf-parse'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
@@ -17,7 +18,8 @@ let pdfContent: string | null = null
 export async function initializeQASystem(pdfPath: string) {
   try {
     if (!pdfContent) {
-      const dataBuffer = await fs.readFile(pdfPath)
+      // Use synchronous file reading to avoid issues with async file access during build
+      const dataBuffer = fs.readFileSync(pdfPath)
       const pdfData = await pdf(dataBuffer)
       pdfContent = pdfData.text
     }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { initializeQASystem, answerQuestion } from '@/utils/pdf_qa'
 import path from 'path'
+import fs from 'fs'
 
 let isInitialized = false
 
@@ -9,6 +10,16 @@ export async function POST(req: Request) {
     // Initialize the QA system if not already done
     if (!isInitialized) {
       const pdfPath = path.join(process.cwd(), 'public', 'resume.pdf')
+      
+      // Check if file exists
+      if (!fs.existsSync(pdfPath)) {
+        console.error('Resume PDF not found at:', pdfPath)
+        return NextResponse.json(
+          { error: 'Resume file not found' },
+          { status: 404 }
+        )
+      }
+
       isInitialized = await initializeQASystem(pdfPath)
       
       if (!isInitialized) {

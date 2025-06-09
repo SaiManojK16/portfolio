@@ -69,8 +69,9 @@
     "input-otp": "1.4.1",
     "langchain": "^0.3.27",
     "lucide-react": "^0.331.0",
+    "mini-css-extract-plugin": "^2.9.2",
     "motion": "^12.16.0",
-    "next": "14.1.0",
+    "next": "15.3.3",
     "next-themes": "^0.2.1",
     "nodemailer": "^7.0.3",
     "pdf-parse": "^1.1.1",
@@ -88,8 +89,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
-    "zod": "^3.24.1",
-    "mini-css-extract-plugin": "^2.9.2"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

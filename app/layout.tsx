@@ -1,96 +1,57 @@
-import type React from "react";
-import type { Metadata } from "next";
-import ClientLayout from "./client";
-import { Suspense } from "react";
-import { Inter as FontSans } from "next/font/google";
-import { cn } from "@/lib/utils";
-import "./globals.css";
-import { ThemeProvider } from "./providers";
+import type { Metadata, Viewport } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { cn } from "@/lib/utils"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Navigation } from "@/components/navigation"
+import { Footer } from "@/components/footer"
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { ChatButton } from "@/components/chat/ChatButton"
+import ThemeToggle from "@/components/theme-toggle"
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://saimanojkartala.com'),
-  title: "Sai Manoj Kartala | AI & Full-Stack Developer",
-  description:
-    "Portfolio of Sai Manoj Kartala, an AI & Full-Stack Developer specializing in machine learning, web development, and AR technologies.",
-  keywords: [
-    "Sai Manoj Kartala",
-    "AI Developer",
-    "Full Stack Developer",
-    "Machine Learning",
-    "Python",
-    "TensorFlow",
-    "MERN Stack",
-    "AWS",
+  title: 'Sai Manoj Kartala',
+  description: 'Portfolio website of Sai Manoj Kartala',
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-  authors: [{ name: "Sai Manoj Kartala" }],
-  creator: "Sai Manoj Kartala",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/svg+xml" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png" }],
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://saimanojkartala.com",
-    title: "Sai Manoj Kartala | AI & Full-Stack Developer",
-    description:
-      "Portfolio of Sai Manoj Kartala, an AI & Full-Stack Developer specializing in machine learning, web development, and AR technologies.",
-    siteName: "Sai Manoj Kartala Portfolio",
-    images: [
-      {
-        url: "/favicon.png",
-        width: 512,
-        height: 512,
-        alt: "Sai Manoj Kartala Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Sai Manoj Kartala | AI & Full-Stack Developer",
-    description:
-      "Portfolio of Sai Manoj Kartala, an AI & Full-Stack Developer specializing in machine learning, web development, and AR technologies.",
-    creator: "@saimanojkartala",
-    images: ["/favicon.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  generator: "v0.dev",
-};
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-        <meta name="theme-color" content="#030303" media="(prefers-color-scheme: dark)" />
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        <link rel="manifest" href="/manifest.json" />
-      </head>
-      <body className={cn(
-        "min-h-screen font-sans antialiased bg-white dark:bg-[#030303] transition-colors duration-700 overflow-x-hidden",
-        fontSans.variable
-      )}>
-        <ThemeProvider>
-          <Suspense>
-            <ClientLayout>{children}</ClientLayout>
-          </Suspense>
+      <head />
+      <body className={cn(inter.className, "min-h-screen bg-background antialiased")}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="relative flex min-h-screen flex-col">
+            <div className="fixed top-4 right-4 z-50">
+              <ThemeToggle />
+            </div>
+          <Navigation />
+            <ChatButton />
+          <main className="flex-1">{children}</main>
+          <Footer />
+            <Analytics />
+            <SpeedInsights />
+          </div>
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

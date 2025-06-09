@@ -10,6 +10,7 @@ import {
   IconBrandInstagram,
   IconBrandLinkedin,
   IconWorld,
+  IconBriefcase,
 } from "@tabler/icons-react"
 
 type NavItem = {
@@ -27,17 +28,22 @@ export const navItems: NavItem[] = [
   {
     title: "Home",
     icon: <IconHome className="h-full w-full text-foreground/80" />,
-    href: "/",
+    href: "#home",
   },
   {
     title: "About",
     icon: <IconUser className="h-full w-full text-foreground/80" />,
-    href: "/about",
+    href: "#about",
   },
   {
     title: "Projects",
     icon: <IconDeviceDesktop className="h-full w-full text-foreground/80" />,
-    href: "/projects",
+    href: "#projects",
+  },
+  {
+    title: "Experience",
+    icon: <IconBriefcase className="h-full w-full text-foreground/80" />,
+    href: "#experience",
   },
   {
     title: "Resume",
@@ -47,12 +53,12 @@ export const navItems: NavItem[] = [
   {
     title: "Education",
     icon: <IconSchool className="h-full w-full text-foreground/80" />,
-    href: "/education",
+    href: "#education",
   },
   {
     title: "Contact",
     icon: <IconMail className="h-full w-full text-foreground/80" />,
-    href: "/contact",
+    href: "#contact",
   },
   {
     title: "Socials",

@@ -4,48 +4,8 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { TypeAnimation } from "react-type-animation"
 import ThemeToggle from "./theme-toggle"
-
-function FloatingPaths({ position }: { position: number }) {
-  const paths = Array.from({ length: 36 }, (_, i) => ({
-    id: i,
-    d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-      380 - i * 5 * position
-    } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-      152 - i * 5 * position
-    } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-      684 - i * 5 * position
-    } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-    width: 0.5 + i * 0.03,
-  }))
-
-  return (
-    <div className="absolute inset-0 pointer-events-none opacity-30">
-      <svg className="w-full h-full text-slate-950 dark:text-white" viewBox="0 0 696 316" fill="none">
-        <title>Background Paths</title>
-        {paths.map((path) => (
-          <motion.path
-            key={path.id}
-            d={path.d}
-            stroke="currentColor"
-            strokeWidth={path.width}
-            strokeOpacity={0.1 + path.id * 0.03}
-            initial={{ pathLength: 0.3, opacity: 0.6 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.3, 0.6, 0.3],
-              pathOffset: [0, 1, 0],
-            }}
-            transition={{
-              duration: 20 + Math.random() * 10,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </svg>
-    </div>
-  )
-}
+import Link from "next/link"
+import { IconDownload, IconMail, IconCheck } from "@tabler/icons-react"
 
 export default function Hero() {
   const fadeUpVariants = {
@@ -62,11 +22,107 @@ export default function Hero() {
   }
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-white dark:bg-[#030303] transition-colors duration-700">
-      <div className="absolute inset-0">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
-      </div>
+    <div className="relative min-h-screen w-full flex items-center justify-center">
+      <style jsx global>{`
+        .button-base {
+          --width: 160px;
+          --height: 45px;
+          width: var(--width);
+          height: var(--height);
+          position: relative;
+          text-align: center;
+          border-radius: 100px;
+          font-family: inherit;
+          transition: background 0.3s;
+        }
+
+        .download-btn {
+          background: black;
+        }
+
+        .contact-btn {
+          background: black;
+        }
+
+        .dark .download-btn,
+        .dark .contact-btn {
+          background: white;
+        }
+
+        .button-text {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          color: white;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        .dark .button-text {
+          color: black;
+        }
+
+        .button-wrapper,
+        .button-text,
+        .button-icon {
+          overflow: hidden;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          left: 0;
+        }
+
+        .button-text {
+          top: 0
+        }
+
+        .button-text,
+        .button-icon {
+          transition: top 0.5s;
+        }
+
+        .button-icon {
+          color: white;
+          top: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .dark .button-icon {
+          color: black;
+        }
+
+        .download-btn:hover,
+        .contact-btn:hover {
+          background: #333;
+        }
+
+        .dark .download-btn:hover,
+        .dark .contact-btn:hover {
+          background: #f0f0f0;
+        }
+
+        .download-btn:hover .button-text,
+        .contact-btn:hover .button-text {
+          top: -100%;
+        }
+
+        .download-btn:hover .button-icon,
+        .contact-btn:hover .button-icon {
+          top: 0;
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
 
       <ThemeToggle />
 
@@ -77,7 +133,7 @@ export default function Hero() {
               <span className="text-black/60 dark:text-white/60 whitespace-nowrap">
                 Hi, I'm
               </span>
-              <span className="bg-clip-text text-transparent bg-gradient-to-b from-black dark:from-white to-black/80 dark:to-white/80 whitespace-nowrap">
+              <span className="text-black dark:text-white whitespace-nowrap">
                 Sai Manoj Kartala
               </span>
             </h1>
@@ -111,6 +167,45 @@ export default function Hero() {
                 <span>Full-Stack Developer | Machine Learning Engineer | AI Developer | Web Developer</span>
               </noscript>
             </div>
+          </motion.div>
+
+          <motion.div 
+            custom={3} 
+            variants={fadeUpVariants} 
+            initial="hidden" 
+            animate="visible"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          >
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="button-base download-btn"
+            >
+              <div className="button-wrapper">
+                <div className="button-text">
+                  Resume
+                  <IconDownload size={20} />
+                </div>
+                <span className="button-icon">
+                  <IconDownload size={24} />
+                </span>
+              </div>
+            </a>
+            <Link 
+              href="#contact" 
+              className="button-base contact-btn"
+            >
+              <div className="button-wrapper">
+                <div className="button-text">
+                  Contact me
+                  <IconMail size={20} />
+                </div>
+                <span className="button-icon">
+                  <IconMail size={24} />
+                </span>
+              </div>
+            </Link>
           </motion.div>
         </div>
       </div>

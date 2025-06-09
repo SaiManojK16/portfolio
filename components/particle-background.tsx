@@ -91,27 +91,36 @@ interface Particle {
 }
 
 export default function ParticleBackground({
-  particleCount = 2000,
+  particleCount = 800,
   noiseIntensity = 0.003,
   particleSize = { min: 0.5, max: 2 },
   className,
 }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const animationFrameRef = useRef<number>()
   const noise = createNoise()
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext("2d", { alpha: true })
+    const ctx = canvas.getContext("2d", { 
+      alpha: true,
+      willReadFrequently: false,
+      desynchronized: true
+    })
     if (!ctx) return
 
     const resizeCanvas = () => {
       const container = canvas.parentElement
       if (!container) return
-
-      canvas.width = container.clientWidth
-      canvas.height = container.clientHeight
+      
+      const scale = window.devicePixelRatio || 1
+      canvas.width = container.clientWidth * scale
+      canvas.height = container.clientHeight * scale
+      canvas.style.width = container.clientWidth + "px"
+      canvas.style.height = container.clientHeight + "px"
+      ctx.scale(scale, scale)
     }
 
     resizeCanvas()
@@ -125,53 +134,64 @@ export default function ParticleBackground({
       maxLife: 100 + Math.random() * 50,
     }))
 
-    const animate = () => {
-      const isDark = document.documentElement.classList.contains("dark")
+    let lastTime = 0
+    const targetFPS = 30
+    const frameInterval = 1000 / targetFPS
 
-      ctx.fillStyle = isDark ? "rgba(0, 0, 0, 0.1)" : "rgba(255, 255, 255, 0.1)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime
 
-      for (const particle of particles) {
-        particle.life += 1
-        if (particle.life > particle.maxLife) {
-          particle.life = 0
-          particle.x = Math.random() * canvas.width
-          particle.y = Math.random() * canvas.height
+      if (deltaTime > frameInterval) {
+        lastTime = currentTime - (deltaTime % frameInterval)
+        
+        const isDark = document.documentElement.classList.contains("dark")
+        ctx.fillStyle = isDark ? "rgba(0, 0, 0, 0.1)" : "rgba(255, 255, 255, 0.1)"
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+        ctx.beginPath()
+        for (const particle of particles) {
+          particle.life += 1
+          if (particle.life > particle.maxLife) {
+            particle.life = 0
+            particle.x = Math.random() * canvas.width
+            particle.y = Math.random() * canvas.height
+          }
+
+          const opacity = Math.sin((particle.life / particle.maxLife) * Math.PI) * 0.15
+          const n = noise.simplex3(particle.x * noiseIntensity, particle.y * noiseIntensity, Date.now() * 0.0001)
+          const angle = n * Math.PI * 4
+
+          particle.velocity.x = Math.cos(angle) * 2
+          particle.velocity.y = Math.sin(angle) * 2
+
+          particle.x += particle.velocity.x
+          particle.y += particle.velocity.y
+
+          particle.x = (particle.x + canvas.width) % canvas.width
+          particle.y = (particle.y + canvas.height) % canvas.height
+
+          ctx.moveTo(particle.x, particle.y)
+          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         }
 
-        const opacity = Math.sin((particle.life / particle.maxLife) * Math.PI) * 0.15
-
-        const n = noise.simplex3(particle.x * noiseIntensity, particle.y * noiseIntensity, Date.now() * 0.0001)
-
-        const angle = n * Math.PI * 4
-        particle.velocity.x = Math.cos(angle) * 2
-        particle.velocity.y = Math.sin(angle) * 2
-
-        particle.x += particle.velocity.x
-        particle.y += particle.velocity.y
-
-        if (particle.x < 0) particle.x = canvas.width
-        if (particle.x > canvas.width) particle.x = 0
-        if (particle.y < 0) particle.y = canvas.height
-        if (particle.y > canvas.height) particle.y = 0
-
-        ctx.fillStyle = isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+        ctx.fillStyle = isDark ? `rgba(255, 255, 255, 0.15)` : `rgba(0, 0, 0, 0.15)`
         ctx.fill()
       }
 
-      requestAnimationFrame(animate)
+      animationFrameRef.current = requestAnimationFrame(animate)
     }
 
-    animate()
+    animationFrameRef.current = requestAnimationFrame(animate)
 
-    const handleResize = () => {
-      resizeCanvas()
+    const debouncedResize = debounce(resizeCanvas, 250)
+    window.addEventListener("resize", debouncedResize)
+
+    return () => {
+      window.removeEventListener("resize", debouncedResize)
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
     }
-
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
   }, [particleCount, noiseIntensity, particleSize, noise])
 
   return (
@@ -179,4 +199,16 @@ export default function ParticleBackground({
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
     </div>
   )
+}
+
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
 } 

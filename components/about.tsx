@@ -16,45 +16,15 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <motion.div 
-              className="aspect-square w-full max-w-[500px] mx-auto"
-              animate={{ 
-                y: [0, -10, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut"
-              }}
-            >
+            <div className="aspect-square w-full max-w-[500px] mx-auto">
               <div className="relative">
                 <DirectionAwareHover
                   imageUrl="/portfolio/images/Me.jpg"
                   className="border-4 border-border"
                   imageClassName="object-cover object-[center_15%]"
                 />
-                {/* Decorative circles */}
-                <motion.div 
-                  className="absolute -inset-4 border-2 border-dashed border-border rounded-full"
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                />
-                <motion.div 
-                  className="absolute -inset-8 border border-dotted border-border/50 rounded-full"
-                  animate={{ rotate: -360 }}
-                  transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                />
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Content Column */}

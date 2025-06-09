@@ -168,7 +168,12 @@ export function Skills() {
   return (
     <section id="skills" className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-16">Technical Skills</h2>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold">Technical Skills</h2>
+          <p className="mt-4 text-muted-foreground">
+            A comprehensive overview of my technical expertise and tools I work with
+          </p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((category) => (
             <div

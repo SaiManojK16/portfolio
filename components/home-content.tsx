@@ -1,29 +1,32 @@
 "use client"
 
-import { Suspense } from 'react'
+import { Suspense, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import About from "@/components/about"
-import ContactHeader from "@/components/contact-header"
+import Contact from "@/components/contact"
 import Education from "@/components/education"
 import Experience from "@/components/experience"
 import Hero from "@/components/hero"
-import Projects from "@/components/projects"
-import { motion } from "framer-motion"
 import { Skills } from "@/components/skills"
 import { SuccessMessage } from './success-message'
 
+// Dynamically import the Projects component since it's usually larger
+const Projects = dynamic(() => import("@/components/projects"), {
+  loading: () => <div className="min-h-screen flex items-center justify-center">Loading projects...</div>
+})
+
 export default function HomeContent() {
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 0.1 * i,
-        duration: 0.5,
-        ease: [0.23, 0.86, 0.39, 0.96],
-      },
-    }),
-  }
+  // Memoize section wrapper to prevent unnecessary re-renders
+  const SectionWrapper = useCallback(({ id, children }: { id: string, children: React.ReactNode }) => (
+    <section 
+      id={id} 
+      className="min-h-screen py-20 will-change-transform"
+    >
+      <div className="container mx-auto px-4">
+        {children}
+      </div>
+    </section>
+  ), [])
 
   return (
     <div className="flex flex-col w-full">
@@ -32,52 +35,42 @@ export default function HomeContent() {
       </Suspense>
 
       {/* Hero Section */}
-      <section id="home" className="min-h-screen">
+      <section id="home" className="min-h-screen will-change-transform">
         <Hero />
       </section>
 
       {/* Content Sections */}
       <div>
         {/* About Section */}
-        <section id="about" className="min-h-screen py-20">
-          <div className="container mx-auto px-4">
-            <About />
-          </div>
-        </section>
+        <SectionWrapper id="about">
+          <About />
+        </SectionWrapper>
 
         {/* Experience Section */}
-        <section id="experience" className="min-h-screen py-20">
-          <div className="container mx-auto px-4">
-            <motion.section
-              initial="initial"
-              animate="animate"
-              className="mb-20"
-            >
-              <motion.div custom={0} variants={fadeInUp} className="flex items-center gap-2 mb-6">
-              </motion.div>
-              <Experience />
-            </motion.section>
-          </div>
-        </section>
+        <SectionWrapper id="experience">
+          <Experience />
+        </SectionWrapper>
 
         {/* Projects Section */}
-        <section id="projects" className="min-h-screen py-20">
-          <Projects />
-        </section>
+        <SectionWrapper id="projects">
+          <Suspense fallback={<div>Loading projects...</div>}>
+            <Projects />
+          </Suspense>
+        </SectionWrapper>
 
         {/* Skills Section */}
-        <section id="skills" className="min-h-screen py-20">
+        <SectionWrapper id="skills">
           <Skills />
-        </section>
+        </SectionWrapper>
 
         {/* Education Section */}
-        <section id="education" className="min-h-screen py-20">
+        <SectionWrapper id="education">
           <Education />
-        </section>
+        </SectionWrapper>
 
         {/* Contact Section */}
-        <section id="contact">
-          <ContactHeader />
+        <section id="contact" className="will-change-transform">
+          <Contact />
         </section>
       </div>
     </div>

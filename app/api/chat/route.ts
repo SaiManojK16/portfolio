@@ -6,8 +6,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ 
   model: "gemini-2.0-flash",
   generationConfig: {
-    temperature: 0.7,
+    temperature: 0.2,
     maxOutputTokens: 2048,
+    topK: 40,
+    topP: 0.8,
   }
 });
 
@@ -80,40 +82,45 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const payload = {
-      contents: chatHistory,
-      generationConfig: {
-        temperature: 0.2,
-        maxOutputTokens: 200,
-      },
-    };
-
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
-      return NextResponse.json({
-        message: result.candidates[0].content.parts[0].text
+    try {
+      const chat = model.startChat({
+        history: chatHistory,
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 2048,
+          topK: 40,
+          topP: 0.8,
+        },
       });
-    } else {
-      throw new Error('No valid response received from the chatbot.');
+
+      const result = await chat.sendMessage(message);
+      const response = await result.response;
+      const text = response.text();
+
+      // Format the response with proper markdown
+      const formattedText = text
+        .replace(/\n\n/g, '\n') // Remove extra newlines
+        .replace(/^/gm, '') // Remove any leading spaces
+        .trim(); // Remove trailing whitespace
+
+      return NextResponse.json({ message: formattedText });
+    } catch (error: any) {
+      console.error('Gemini API error:', error);
+      return NextResponse.json(
+        { 
+          error: 'Failed to generate response',
+          details: error?.message || 'Unknown error'
+        },
+        { status: 500 }
+      );
     }
-  } catch (error) {
-    console.error('Chat API error:', error);
+  } catch (error: any) {
+    console.error('Request processing error:', error);
     return NextResponse.json(
-      { error: 'Failed to process chat request' },
+      { 
+        error: 'Failed to process request',
+        details: error?.message || 'Unknown error'
+      },
       { status: 500 }
     );
   }

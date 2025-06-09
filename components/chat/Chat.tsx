@@ -170,11 +170,46 @@ export const Chat: React.FC = () => {
     return false;
   };
 
+  /**
+   * Helper function to format basic Markdown text into HTML.
+   * Handles bold text (**), headings (#), and unordered lists (- or *).
+   */
+  const formatMarkdown = (text: string) => {
+    let formattedText = text;
+
+    // Convert headings (e.g., # Heading, ## Subheading)
+    formattedText = formattedText.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    formattedText = formattedText.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    formattedText = formattedText.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+
+    // Convert bold text (**)
+    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert unordered lists (* or - at start of line)
+    formattedText = formattedText.replace(/^(\s*)[*-]\s*(.*)$/gm, (match, leadingSpaces, itemText) => {
+        const indentLevel = leadingSpaces.length / 2; // Assuming 2 spaces per indent level
+        const ulPadding = ' '.repeat(indentLevel * 2); // Add padding for nested lists
+        return `${ulPadding}<li>${itemText}</li>`;
+    });
+    
+    // Wrap ul elements if they are not already wrapped
+    if (formattedText.includes('<li>') && !formattedText.includes('<ul>')) {
+        formattedText = formattedText.replace(/(<li>.*?<\/li>(<br \/>)?)+/gs, '<ul>$&</ul>');
+    }
+
+    // Replace multiple newlines with <br /> for paragraphs, then single newlines
+    formattedText = formattedText.replace(/\n\s*\n/g, '<br /><br />'); // Paragraph breaks
+    formattedText = formattedText.replace(/\n/g, '<br />'); // Line breaks
+
+    return formattedText;
+  };
+
   const sendMessage = async (userMessage: string) => {
     if (!userMessage.trim() || isLoading) return;
 
     setError('');
     setIsLoading(true);
+    setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
     setInput('');
 
     // Check for special actions first
@@ -184,15 +219,13 @@ export const Chat: React.FC = () => {
       return;
     }
 
-    // Regular message handling
-    setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
-
     try {
       const initialSystemInstruction = `
         You are a helpful, professional, and courteous personal assistant AI for Sai Manoj Kartala.
         Your ABSOLUTE and ONLY task is to answer questions strictly and solely based on the provided resume content.
         You MUST NOT infer, assume, or generate any information not explicitly present in the resume.
         When answering, ALWAYS use phrases like "Sai Manoj Kartala is...", "Sai has...", "Sai's experience includes...", or "According to Sai's resume..." to maintain a personal assistant tone.
+        Format your responses clearly using Markdown, including headings (e.g., #, ##), bold text (**) for emphasis, and bullet points (-) for lists, to provide a structured and easy-to-read overview.
         If a question CANNOT be answered directly and entirely from the resume, you MUST clearly state that you do not have that information in the resume. For example: "I apologize, but Sai Manoj Kartala's resume does not contain information about [topic]."
         Keep your responses concise, professional, and directly relevant to Sai's professional experience, skills, projects, and education mentioned in the resume.
         Do NOT engage in discussions or provide information outside the direct scope of the resume.
@@ -203,7 +236,7 @@ export const Chat: React.FC = () => {
 
       let chatHistory = [
         { role: 'user', parts: [{ text: initialSystemInstruction }] },
-        { role: 'model', parts: [{ text: 'I understand. I will act as a personal assistant, providing information about Sai Manoj Kartala based strictly and solely on the provided resume. I will clearly indicate if information is not available in the resume, and will not add any external details.' }] },
+        { role: 'model', parts: [{ text: 'I understand. I will act as a personal assistant, providing structured information about Sai Manoj Kartala based strictly and solely on the provided resume. I will clearly indicate if information is not available in the resume, and will not add any external details.' }] },
       ];
 
       messages.forEach(msg => {
@@ -215,15 +248,6 @@ export const Chat: React.FC = () => {
 
       chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
 
-      const payload = {
-        contents: chatHistory,
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 200,
-        },
-      };
-
-      // Get API key from environment variable
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -300,79 +324,42 @@ export const Chat: React.FC = () => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={cn(
-              "flex gap-2 animate-in fade-in-0 duration-300",
-              msg.sender === 'user' ? "justify-end" : "justify-start"
-            )}
-          >
-            {msg.sender === 'bot' && (
-              <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                <IconRobot className="h-5 w-5 text-accent-foreground" />
-              </div>
-            )}
+        {messages.length === 0 ? (
+          <div className="text-center text-muted-foreground italic p-4">
+            Hello! I am an AI assistant specialized in answering questions about Sai Manoj Kartala's professional background.
+            Feel free to ask about his skills, experience, education, or projects!
+          </div>
+        ) : (
+          messages.map((msg, index) => (
             <div
+              key={index}
               className={cn(
-                "max-w-[80%] p-3 rounded-lg shadow-sm break-words",
-                msg.sender === 'bot'
-                  ? "bg-accent text-accent-foreground rounded-tl-none"
-                  : "bg-primary text-primary-foreground rounded-tr-none"
+                "flex gap-2 animate-in fade-in-0 duration-300",
+                msg.sender === 'user' ? "justify-end" : "justify-start"
               )}
             >
-              <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
-              {msg.action && (
-                <div className="mt-2 pt-2 border-t border-border/50">
-                  {msg.action.type === 'social' ? (
-                    <div className="flex flex-col gap-2">
-                      {msg.action.links?.map((link, index) => (
-                        <a
-                          key={index}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-                        >
-                          {link.type === 'linkedin' ? (
-                            <IconBrandLinkedin className="h-4 w-4" />
-                          ) : (
-                            <IconBrandGithub className="h-4 w-4" />
-                          )}
-                          {link.label}
-                          <IconExternalLink className="h-4 w-4" />
-                        </a>
-                      ))}
-                    </div>
-                  ) : msg.action.type === 'link' ? (
-                    <a
-                      href={msg.action.value}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-                    >
-                      {msg.action.label}
-                      <IconExternalLink className="h-4 w-4" />
-                    </a>
-                  ) : (
-                    <a
-                      href={`mailto:${msg.action.value}`}
-                      className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-                    >
-                      {msg.action.label}
-                      <IconExternalLink className="h-4 w-4" />
-                    </a>
-                  )}
+              {msg.sender === 'bot' && (
+                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                  <IconRobot className="h-5 w-5 text-accent-foreground" />
+                </div>
+              )}
+              <div
+                className={cn(
+                  "max-w-[80%] p-3 rounded-lg shadow-sm break-words",
+                  msg.sender === 'bot'
+                    ? "bg-accent text-accent-foreground rounded-tl-none"
+                    : "bg-primary text-primary-foreground rounded-tr-none"
+                )}
+                dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.text) }}
+              />
+              {msg.sender === 'user' && (
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+                  <IconUser className="h-5 w-5 text-primary-foreground" />
                 </div>
               )}
             </div>
-            {msg.sender === 'user' && (
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-                <IconUser className="h-5 w-5 text-primary-foreground" />
-              </div>
-            )}
-          </div>
-        ))}
+          ))
+        )}
         {isLoading && (
           <div className="flex gap-2 animate-in fade-in-0">
             <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
@@ -389,6 +376,13 @@ export const Chat: React.FC = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="mx-4 mb-4 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-sm">
+          {error}
+        </div>
+      )}
 
       {/* Input */}
       <div className="border-t p-4 bg-accent/5">

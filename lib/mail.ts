@@ -13,37 +13,29 @@ const createTransporter = async (): Promise<Transporter> => {
     throw new Error('Email configuration is missing. Please check your environment variables.');
   }
 
-  // Create transporter with retry logic
+  // Create transporter with Gmail settings
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    // Add TLS options
     tls: {
       rejectUnauthorized: true
-    },
-    // Add pooling for better performance
-    pool: true,
-    maxConnections: 3,
-    maxMessages: 100,
-    rateDelta: 1000,
-    rateLimit: 5
+    }
   });
 
   // Verify SMTP connection configuration
-  return new Promise((resolve, reject) => {
-    transporter.verify((error: Error | null, success: boolean) => {
-      if (error) {
-        console.error('SMTP Connection Error:', error);
-        reject(error);
-      } else {
-        console.log('SMTP Connection Success:', success);
-        resolve(transporter);
-      }
-    });
-  });
+  try {
+    await transporter.verify();
+    console.log('SMTP Connection verified successfully!');
+    return transporter;
+  } catch (error) {
+    console.error('SMTP Connection Error:', error);
+    throw error;
+  }
 };
 
 interface EmailData {
@@ -64,7 +56,7 @@ export async function sendEmail({ name, email, message }: EmailData): Promise<Em
     // Email content
     const mailOptions = {
       from: {
-        name: name,
+        name: `${name} via Portfolio`,
         address: process.env.EMAIL_USER as string
       },
       to: process.env.EMAIL_TO || process.env.EMAIL_USER,
@@ -77,7 +69,6 @@ export async function sendEmail({ name, email, message }: EmailData): Promise<Em
         <p>${message.replace(/\n/g, '<br>')}</p>
       `,
       replyTo: email,
-      // Add text version for better deliverability
       text: `
 New Contact Form Submission
 --------------------------
@@ -95,23 +86,11 @@ ${message}
       subject: mailOptions.subject,
     });
 
-    // Send email with promise
-    const info = await new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, (error: Error | null, info: nodemailer.SentMessageInfo) => {
-        if (error) {
-          console.error('SMTP Send Error:', error);
-          reject(error);
-        } else {
-          resolve(info);
-        }
-      });
-    });
-
+    const info = await transporter.sendMail(mailOptions);
     console.log('Email sent successfully:', info);
-    return { success: true, messageId: (info as nodemailer.SentMessageInfo).messageId };
+    return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Error sending email:', error);
-    // Throw a more detailed error
     throw new Error(
       error instanceof Error 
         ? `Failed to send email: ${error.message}`

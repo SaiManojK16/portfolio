@@ -7,8 +7,11 @@ import { Loader2 } from "lucide-react"
 import { IconMapPin, IconMail, IconPhone } from "@tabler/icons-react"
 import { toast } from "sonner"
 
-// Use Express server URL directly since we can't use rewrites with static export
-const API_URL = 'http://localhost:3000';  // Express server should run on a different port
+// Use current origin for API URL
+const getApiUrl = () => {
+  if (typeof window === 'undefined') return '/api/contact';
+  return `${window.location.origin}/api/contact`;
+}
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -44,7 +47,7 @@ export default function Contact() {
     setIsSubmitting(true)
 
     try {
-      const url = `${API_URL}/api/contact`;
+      const url = getApiUrl();
       console.log('Sending request to:', url);
       console.log('Form data:', formData);
 

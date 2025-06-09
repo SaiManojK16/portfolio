@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
+import { Suspense } from 'react'
 import About from "@/components/about"
 import ContactHeader from "@/components/contact-header"
 import Education from "@/components/education"
@@ -12,6 +13,7 @@ import Projects from "@/components/projects"
 import { motion } from "framer-motion"
 import { IconUser, IconBriefcase } from "@tabler/icons-react"
 import { Skills } from "@/components/skills"
+import HomeContent from "@/components/home-content"
 
 export default function HomePage() {
   const searchParams = useSearchParams()
@@ -46,56 +48,8 @@ export default function HomePage() {
   }, [searchParams])
 
   return (
-    <div className="flex flex-col w-full">
-      {/* Hero Section */}
-      <section id="home" className="min-h-screen">
-        <Hero />
-      </section>
-
-      {/* Content Sections */}
-      <div>
-        {/* About Section */}
-        <section id="about" className="min-h-screen py-20">
-          <div className="container mx-auto px-4">
-            <About />
-          </div>
-        </section>
-
-        {/* Experience Section */}
-        <section id="experience" className="min-h-screen py-20">
-          <div className="container mx-auto px-4">
-            <motion.section
-              initial="initial"
-              animate="animate"
-              className="mb-20"
-            >
-              <motion.div custom={0} variants={fadeInUp} className="flex items-center gap-2 mb-6">
-              </motion.div>
-              <Experience />
-            </motion.section>
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects" className="min-h-screen py-20">
-          <Projects />
-        </section>
-
-        {/* Skills Section */}
-        <section id="skills" className="min-h-screen py-20">
-          <Skills />
-        </section>
-
-        {/* Education Section */}
-        <section id="education" className="min-h-screen py-20">
-          <Education />
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact">
-          <ContactHeader />
-        </section>
-      </div>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   )
 }

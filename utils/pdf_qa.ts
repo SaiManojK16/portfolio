@@ -13,12 +13,35 @@ const model = genAI.getGenerativeModel({
   }
 })
 
+// Cache the PDF content in memory
 let pdfContent: string | null = null
+
+// Try to load the PDF content at startup
+try {
+  const pdfPath = path.join(process.cwd(), 'public', 'resume.pdf')
+  if (fs.existsSync(pdfPath)) {
+    const dataBuffer = fs.readFileSync(pdfPath)
+    pdf(dataBuffer).then((data) => {
+      pdfContent = data.text
+      console.log('PDF content loaded successfully')
+    }).catch((error) => {
+      console.error('Error loading PDF content:', error)
+    })
+  } else {
+    console.error('Resume PDF not found at:', pdfPath)
+  }
+} catch (error) {
+  console.error('Error during initial PDF load:', error)
+}
 
 export async function initializeQASystem(pdfPath: string) {
   try {
     if (!pdfContent) {
-      // Use synchronous file reading to avoid issues with async file access during build
+      // If content is not cached, try to load it
+      if (!fs.existsSync(pdfPath)) {
+        console.error('PDF file not found at:', pdfPath)
+        return false
+      }
       const dataBuffer = fs.readFileSync(pdfPath)
       const pdfData = await pdf(dataBuffer)
       pdfContent = pdfData.text
@@ -32,7 +55,7 @@ export async function initializeQASystem(pdfPath: string) {
 
 export async function answerQuestion(question: string): Promise<string> {
   if (!pdfContent) {
-    throw new Error('QA system not initialized')
+    throw new Error('QA system not initialized - PDF content not available')
   }
 
   try {

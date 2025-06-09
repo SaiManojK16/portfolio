@@ -1,5 +1,6 @@
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import fs from 'fs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -48,6 +49,23 @@ const nextConfig = {
           chunkFilename: 'static/css/[id].[contenthash].css',
         })
       );
+    }
+
+    // Copy resume.pdf to the output directory during build
+    if (isServer) {
+      const publicDir = path.join(process.cwd(), 'public');
+      const outputDir = path.join(process.cwd(), '.next', 'public');
+      
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+      
+      if (fs.existsSync(path.join(publicDir, 'resume.pdf'))) {
+        fs.copyFileSync(
+          path.join(publicDir, 'resume.pdf'),
+          path.join(outputDir, 'resume.pdf')
+        );
+      }
     }
 
     // Add CSS extraction plugin configuration

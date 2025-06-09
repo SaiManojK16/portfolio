@@ -1,8 +1,6 @@
 "use client"
 
-import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
+import { Suspense } from 'react'
 import About from "@/components/about"
 import ContactHeader from "@/components/contact-header"
 import Education from "@/components/education"
@@ -11,10 +9,9 @@ import Hero from "@/components/hero"
 import Projects from "@/components/projects"
 import { motion } from "framer-motion"
 import { Skills } from "@/components/skills"
+import { SuccessMessage } from './success-message'
 
 export default function HomeContent() {
-  const searchParams = useSearchParams()
-  
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: (i: number) => ({
@@ -27,25 +24,13 @@ export default function HomeContent() {
       },
     }),
   }
-  
-  useEffect(() => {
-    const message = searchParams.get('message')
-    if (message === 'success') {
-      toast.success('Message sent successfully!', {
-        duration: 5000,
-        position: 'top-center',
-        style: {
-          background: 'var(--background)',
-          border: '1px solid var(--border)',
-          color: 'var(--foreground)',
-        },
-        description: 'Thank you for your message. I will get back to you as soon as possible.'
-      })
-    }
-  }, [searchParams])
 
   return (
     <div className="flex flex-col w-full">
+      <Suspense fallback={null}>
+        <SuccessMessage />
+      </Suspense>
+
       {/* Hero Section */}
       <section id="home" className="min-h-screen">
         <Hero />

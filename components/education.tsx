@@ -204,33 +204,33 @@ export default function Education() {
         onMouseEnter={() => setHovered(index)}
         onMouseLeave={() => setHovered(null)}
         className={cn(
-          "rounded-xl relative w-full transition-all duration-300 ease-out p-4 h-[500px] flex flex-col",
+          "rounded-xl relative w-full transition-all duration-300 ease-out p-3 md:p-4 h-[450px] md:h-[500px] flex flex-col",
           data.gradient,
           hovered === index && "scale-[1.02]"
         )}
       >
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-muted">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="p-1 md:p-1.5 rounded-lg bg-muted">
               {data.icon}
             </div>
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-[10px] md:text-xs font-medium text-muted-foreground">
               {data.type === "education" ? "Education" : "Achievement"}
             </span>
           </div>
-          <span className="text-xs text-muted-foreground">{data.period}</span>
-                    </div>
+          <span className="text-[10px] md:text-xs text-muted-foreground">{data.period}</span>
+        </div>
 
-        <div className="space-y-3 flex-grow">
-                    <div>
-            <h3 className="text-lg font-bold text-foreground mb-1">
+        <div className="space-y-2 md:space-y-3 flex-grow">
+          <div>
+            <h3 className="text-base md:text-lg font-bold text-foreground mb-0.5 md:mb-1 line-clamp-2">
               {data.title}
             </h3>
-            <p className="text-sm text-primary font-medium">{data.institution}</p>
+            <p className="text-xs md:text-sm text-primary font-medium">{data.institution}</p>
             {data.location && (
-              <p className="text-xs text-muted-foreground">{data.location}</p>
+              <p className="text-[10px] md:text-xs text-muted-foreground">{data.location}</p>
             )}
-                    </div>
+          </div>
 
           <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden">
             <ResponsiveImage
@@ -241,35 +241,35 @@ export default function Education() {
               priority
               quality={90}
             />
-                  </div>
+          </div>
 
           <div className="flex-grow">
-            {data.type === "education" ? (
+            {data.details.gpa ? (
               <div className="space-y-2">
                 <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">GPA: {data.details.gpa}</p>
-                  <p className="text-xs text-muted-foreground">{data.details.description}</p>
-                    </div>
-                    <div>
-                  <h4 className="font-medium text-xs mb-1">Key Courses</h4>
-                      <div className="flex flex-wrap gap-1">
+                  <p className="text-[10px] md:text-xs text-muted-foreground">GPA: {data.details.gpa}</p>
+                  <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2">{data.details.description}</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-[10px] md:text-xs mb-1">Key Courses</h4>
+                  <div className="flex flex-wrap gap-1">
                     {data.details.courses.map((course: string, i: number) => (
-                          <span
-                            key={i}
-                        className="px-1.5 py-0.5 text-[10px] rounded-full bg-muted text-muted-foreground"
-                          >
-                            {course}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                      <span
+                        key={i}
+                        className="px-1.5 py-0.5 text-[8px] md:text-[10px] rounded-full bg-muted text-muted-foreground"
+                      >
+                        {course}
+                      </span>
+                    ))}
                   </div>
+                </div>
+              </div>
             ) : (
-              <div className="space-y-2">
-                <p className="text-xs text-muted-foreground">{data.details.description}</p>
+              <div className="space-y-1.5 md:space-y-2">
+                <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2">{data.details.description}</p>
                 <div className="space-y-1">
                   {data.details.highlights.map((highlight: string, i: number) => (
-                    <p key={i} className="text-xs text-muted-foreground flex items-start gap-1">
+                    <p key={i} className="text-[10px] md:text-xs text-muted-foreground flex items-start gap-1 line-clamp-2">
                       <span className="mt-0.5">•</span>
                       {highlight}
                     </p>
@@ -286,24 +286,24 @@ export default function Education() {
   CardComponent.displayName = "CardComponent"
 
   return (
-    <section id="education" className="h-screen flex flex-col py-8">
-      <div className="max-w-7xl mx-auto px-4 flex flex-col">
+    <section id="education" className="min-h-screen flex flex-col py-8 overflow-x-hidden w-full">
+      <div className="max-w-7xl mx-auto px-4 flex flex-col w-full">
         <div className="text-center mb-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white/90 mb-2">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white/90 mb-2">
             Education & Achievements
           </h2>
-          <p className="text-gray-600 dark:text-white/60 max-w-3xl mx-auto text-base">
+          <p className="text-sm md:text-base text-gray-600 dark:text-white/60 max-w-3xl mx-auto">
             My academic journey and notable accomplishments
           </p>
         </div>
 
-        {/* Filter Section */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center gap-2 bg-card dark:bg-card/80 rounded-full p-1">
+        {/* Filter Section - Optimized for mobile */}
+        <div className="flex justify-center mb-6 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar">
+          <div className="inline-flex items-center gap-1.5 md:gap-2 bg-card dark:bg-card/80 rounded-full p-1">
             <button
               onClick={() => setFilter('all')}
               className={cn(
-                "px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300",
+                "px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300",
                 filter === 'all' 
                   ? "bg-primary text-primary-foreground" 
                   : "hover:bg-muted"
@@ -314,58 +314,53 @@ export default function Education() {
             <button
               onClick={() => setFilter('education')}
               className={cn(
-                "px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-1.5",
+                "px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 md:gap-1.5",
                 filter === 'education' 
                   ? "bg-primary text-primary-foreground" 
                   : "hover:bg-muted"
               )}
             >
-              <IconSchool className="w-4 h-4" />
-              Education
+              <IconSchool className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden xs:inline">Education</span>
             </button>
             <button
               onClick={() => setFilter('achievement')}
               className={cn(
-                "px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-1.5",
+                "px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 md:gap-1.5",
                 filter === 'achievement' 
                   ? "bg-primary text-primary-foreground" 
                   : "hover:bg-muted"
               )}
             >
-              <IconTrophy className="w-4 h-4" />
-              Achievements
+              <IconTrophy className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden xs:inline">Achievements</span>
             </button>
           </div>
         </div>
 
-        <div className="relative group">
-          {/* Counter */}
-          <div className="absolute top-4 right-4 z-20 bg-black/20 dark:bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs font-medium text-black dark:text-white">
+        <div className="relative group w-full">
+          {/* Counter - Optimized for mobile */}
+          <div className="absolute top-2 md:top-4 right-2 md:right-4 z-20 bg-black/20 dark:bg-white/20 backdrop-blur-sm px-1.5 md:px-2 py-0.5 rounded-full text-[10px] md:text-xs font-medium text-black dark:text-white">
             {currentIndex + 1} / {filteredData.length}
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center w-full relative">
             <div 
               ref={scrollContainerRef}
-              className="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scrollbar-hide max-w-full"
+              className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory no-scrollbar w-full"
               style={{
-                margin: '0 -24px',
-                padding: '0 24px',
-                scrollPaddingLeft: '24px',
-                scrollPaddingRight: '24px',
-                width: 'max-content',
-                position: 'relative',
-                left: '50%',
-                transform: 'translateX(-50%)'
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
               }}
               onMouseEnter={handleInteraction}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onWheel={handleInteraction}
             >
+              <div className="pl-[max(16px,calc((100%-350px)/2))]" />
               {filteredData.length === 0 ? (
                 <div className="flex items-center justify-center w-full py-8">
-                  <p className="text-muted-foreground text-sm">No items to display</p>
+                  <p className="text-sm text-muted-foreground">No items to display</p>
                 </div>
               ) : (
                 <>
@@ -374,7 +369,10 @@ export default function Education() {
                       key={item.title} 
                       ref={(el) => setItemRef(el, index)}
                       className="flex-none snap-center"
-                      style={{ width: '350px' }}
+                      style={{ 
+                        width: 'min(350px, calc(100vw - 48px))',
+                        scrollSnapAlign: 'center'
+                      }}
                     >
                       <CardComponent
                         data={item}
@@ -384,16 +382,17 @@ export default function Education() {
                   ))}
                 </>
               )}
+              <div className="pr-[max(16px,calc((100%-350px)/2))]" />
             </div>
           </div>
 
-          {/* Navigation Dots */}
-          <div className="flex justify-center items-center gap-2 mt-2">
+          {/* Navigation Dots - Optimized for mobile */}
+          <div className="flex justify-center items-center gap-1.5 md:gap-2 mt-2">
             {filteredData.map((item, index) => (
               <button
                 key={index}
                 className={cn(
-                  "group flex items-center gap-1.5 py-1.5 px-2 rounded-full transition-all duration-300",
+                  "group flex items-center gap-1 md:gap-1.5 py-1 md:py-1.5 px-1.5 md:px-2 rounded-full transition-all duration-300",
                   currentIndex === index 
                     ? "bg-black/10 dark:bg-white/10" 
                     : "hover:bg-black/5 dark:hover:bg-white/5"
@@ -401,9 +400,9 @@ export default function Education() {
                 onClick={() => {
                   handleInteraction()
                   if (scrollContainerRef.current) {
-                    const cardWidth = 350
-                    const padding = 24
-                    const scrollPosition = index * (cardWidth + 24) + padding
+                    const cardWidth = Math.min(350, window.innerWidth - 48)
+                    const containerWidth = scrollContainerRef.current.offsetWidth
+                    const scrollPosition = index * (cardWidth + 16) - (containerWidth - cardWidth) / 2
                     scrollContainerRef.current.scrollTo({
                       left: scrollPosition,
                       behavior: 'smooth'
@@ -413,13 +412,13 @@ export default function Education() {
                 }}
               >
                 <div className={cn(
-                  "w-1.5 h-1.5 rounded-full transition-all duration-300",
+                  "w-1 md:w-1.5 h-1 md:h-1.5 rounded-full transition-all duration-300",
                   currentIndex === index 
-                    ? "bg-black dark:bg-white w-4" 
+                    ? "bg-black dark:bg-white w-3 md:w-4" 
                     : "bg-black/30 dark:bg-white/30"
                 )} />
                 <span className={cn(
-                  "text-xs text-black/70 dark:text-white/70 transition-all duration-300",
+                  "text-[10px] md:text-xs text-black/70 dark:text-white/70 transition-all duration-300",
                   currentIndex === index ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                 )}>
                   {item.title.split('–')[0].trim()}
